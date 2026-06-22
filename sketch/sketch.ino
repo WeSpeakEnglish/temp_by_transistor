@@ -1,6 +1,8 @@
 #include <Arduino.h>
 
 #define OW_PIN 2
+#define D0_PIN 0
+#define A1_PIN A1
 
 // Bus control
 void    ow_low()  { pinMode(OW_PIN, OUTPUT); digitalWrite(OW_PIN, LOW); }
@@ -49,6 +51,10 @@ void setup() {
     Serial.begin(115200);
     while(!Serial) delay(10);
     pinMode(OW_PIN, INPUT);
+    
+    // Drive D0 to LOW
+    pinMode(D0_PIN, OUTPUT);
+    digitalWrite(D0_PIN, LOW);
 }
 
 void loop() {
@@ -84,5 +90,13 @@ void loop() {
     Serial.print("  OK\n[TEMP]  ");
     Serial.print(raw/16.0f, 2);
     Serial.println(" °C");
+    
+    // Read analog voltage on A1 and print
+    int a1_raw = analogRead(A1_PIN);
+    float voltage = a1_raw * (3.3 / 1023.0);  // 3.3V ADC reference
+    Serial.print("[Transistor Voltage: ");
+    Serial.print(voltage, 3);
+    Serial.println(" V]");
+    
     delay(2000);
 }
